@@ -1,13 +1,15 @@
 // user's dashboard
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import NavBar from './navbar';
 import { Link, useNavigate } from 'react-router-dom';
 import Create from './create';
 import Study from "./study";
-
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://ec2-18-216-254-218.us-east-2.compute.amazonaws.com:3001/'; // for all requests
+axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true; // for all requests
 const DashboardIndex = () => {
   const [sets, funcSets] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);

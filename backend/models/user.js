@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('../middleware/dbConnect.js');
 
 const flashcardSchema = new mongoose.Schema({
   term: {
@@ -78,7 +78,7 @@ const FlashcardSet = mongoose.model('FlashcardSet', flashcardSetSchema);
 const User = mongoose.model('User', userSchema);
 console.log(User);
 
-module.exports = { mongoose, User, Flashcard, FlashcardSet };
+module.exports = { User, Flashcard, FlashcardSet };
 
 // gets flashcard names and ids
 userSchema.static('getFlashcardSets', async function () {
@@ -98,5 +98,4 @@ userSchema.static('getFlashcardSets', async function () {
       throw error;
     }
   });
-}
-);
+});

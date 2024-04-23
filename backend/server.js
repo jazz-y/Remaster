@@ -4,13 +4,13 @@ const session = require('express-session');
 const db = require('./middleware/dbConnect').db;
 const mongoose = require('./middleware/dbConnect').mongoose;
 const passport = require('passport');
-require('./middleware/passport'); // includes all the passport stuff
+require('./middleware/passport'); // includes passport configs
 
 var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 const cors = require('cors');
-const crypto = require('crypto');
+// const crypto = require('crypto');
 
 const MongoStore = require('connect-mongo');
 
@@ -20,7 +20,7 @@ const app = express();
 
 
 
-app.set('views', path.join(__dirname, 'views'));
+// app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade'); 
 
 app.use(cors()); // cross-origin requests
@@ -31,33 +31,32 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());         
 app.use(express.static(path.join(__dirname, 'public')));
 
-console.log(db.getClient());
 
 app.use(
   session({
     path: '/', 
     secret: process.env.SESSION_SECRET,
-    //crypto.randomBytes(16).toString('hex'),
     collectionName: 'sessions',
     httpOnly: true,
     // since we're not using https:
     secure: false,
-    // don't resave avery time we change pages
+    // don't resave every time we change pages
     resave: false,
     // don't make a session until something's stored
     saveUninitialized: false,
     // store for 60 minutes * 24 = 1 day
-    cookie: { maxAge: 24 * 60 * 60000 },
+    cookie: { secure: false, maxAge: 24 * 60 * 60000 },
     store: MongoStore.create({
-      clientPromise: db.getClient()
+      mongoUrl: process.env.DB_CONNECTION_SESSION
     })
+    
   })
 );
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-// routes ////////////////////////////////////////////////////////
+// routes //////////////////////////////////////////////////////////////////////////////////
 
 app.use('/auth', authRouter);
 console.log("auth router attached");
